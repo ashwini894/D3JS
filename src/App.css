@@ -1,0 +1,42 @@
+.chart-container {
+  background: #f9fafb; /* Light background */
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  display: inline-block;
+}
+
+.bar {
+  transition: fill 0.3s, transform 0.2s;
+  rx: 6; /* rounded corners */
+}
+
+.bar:hover {
+  fill: #ff7f50; /* Coral color on hover */
+  transform: scaleY(1.05);
+  cursor: pointer;
+}
+
+svg {
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent,
+    transparent 29px,
+    #e5e7eb 30px
+  );
+}
+
+.chart-container {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center;     /* Center vertically */
+  flex-direction: column;  /* Keep title and chart stacked */
+  margin-top: 30px;
+}
+
+.chart-box {
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
