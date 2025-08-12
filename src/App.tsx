@@ -4,6 +4,7 @@ import './App.css'
 import BarChart from "./BarChart";
 import LineChart from "./LineChart";
 import HierarchicalBarChart from './HierarchicalBarChart';
+import ScatterPlot from "./ScatterPlot";
 
 type HierarchyData = {
   name: string;
@@ -21,6 +22,16 @@ function App() {
       { name: "C", value: 50 }
     ]
   };
+  const scatterData = [
+    { x: 5, y: 10 },
+    { x: 15, y: 35 },
+    { x: 25, y: 20 },
+    { x: 35, y: 50 },
+    { x: 45, y: 30 },
+    { x: 55, y: 60 },
+  ];
+
+
   return (
     <>
       <div style={{ padding: "20px" }}>
@@ -55,6 +66,14 @@ function App() {
           <div className="chart-box">
             <HierarchicalBarChart data={sampleData} />
           </div>
+        </div>
+      </div>
+
+      {/* forth chart */}
+      <div className="chart-container">
+        <h2>Scatter Plot </h2>
+        <div className="chart-box">
+          <ScatterPlot data={scatterData} />
         </div>
       </div>
 
