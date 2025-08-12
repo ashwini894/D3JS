@@ -1,19 +1,26 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useState } from "react";
+
 import './App.css'
 import BarChart from "./BarChart";
 import LineChart from "./LineChart";
 import HierarchicalBarChart from './HierarchicalBarChart';
 
+type HierarchyData = {
+  name: string;
+  value?: number;
+  children?: HierarchyData[];
+};
+
 function App() {
   const [lineData, setLineData] = useState([10, 20, 15, 25, 30, 22, 18]);
-const sampleData = {
-  name: "root",
-  children: [
-    { name: "A", value: 100, children: [{ name: "A1", value: 60 }, { name: "A2", value: 40 }] },
-    { name: "B", value: 80, children: [{ name: "B1", value: 50 }, { name: "B2", value: 30 }] },
-    { name: "C", value: 50 }
-  ]
-};
+  const sampleData: HierarchyData = {
+    name: "root",
+    children: [
+      { name: "A", value: 100, children: [{ name: "A1", value: 60 }, { name: "A2", value: 40 }] },
+      { name: "B", value: 80, children: [{ name: "B1", value: 50 }, { name: "B2", value: 30 }] },
+      { name: "C", value: 50 }
+    ]
+  };
   return (
     <>
       <div style={{ padding: "20px" }}>

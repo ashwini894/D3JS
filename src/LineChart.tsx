@@ -1,5 +1,15 @@
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import * as d3 from "d3";
+
+interface Props {
+  data: number[];
+  width?: number;
+  height?: number;
+  marginTop?: number;
+  marginRight?: number;
+  marginBottom?: number;
+  marginLeft?: number;
+}
 
 export default function LineChart({
   data,
@@ -9,53 +19,59 @@ export default function LineChart({
   marginRight = 20,
   marginBottom = 30,
   marginLeft = 40
-}) {
-  const gxRef = useRef(null);
-  const gyRef = useRef(null);
+}: Props) {
+  const gxRef = useRef<SVGGElement | null>(null);
+  const gyRef = useRef<SVGGElement | null>(null);
 
-  // Scales
-  const x = d3.scaleLinear()
+  // X scale — index-based
+  const x = d3
+    .scaleLinear<number, number>()
     .domain([0, data.length - 1])
     .range([marginLeft, width - marginRight]);
 
-  const y = d3.scaleLinear()
-    .domain(d3.extent(data))
+  // Y scale — avoid undefined in extent
+  const yDomain = d3.extent(data) as [number, number]; // Cast to remove undefined
+  const y = d3
+    .scaleLinear<number, number>()
+    .domain(yDomain)
     .range([height - marginBottom, marginTop]);
 
-  // Line generator
-  const line = d3.line()
-    .x((_, i) => x(i))
-    .y(d => y(d));
+  // Line generator with tuple type for data points
+  const line = d3
+    .line<[number, number]>()
+    .x(d => x(d[0]))
+    .y(d => y(d[1]));
 
-  // Render axes when scales change
+  // Convert your data array into [index, value] tuples
+  const lineData: [number, number][] = data.map((d, i) => [i, d]);
+
+  // Render axes
   useEffect(() => {
-    d3.select(gxRef.current).call(d3.axisBottom(x));
-    d3.select(gyRef.current).call(d3.axisLeft(y));
+    if (gxRef.current) {
+      d3.select<SVGGElement, unknown>(gxRef.current).call(d3.axisBottom(x));
+    }
+    if (gyRef.current) {
+      d3.select<SVGGElement, unknown>(gyRef.current).call(d3.axisLeft(y));
+    }
   }, [x, y]);
 
   return (
     <svg width={width} height={height}>
       {/* X axis */}
-      <g
-        ref={gxRef}
-        transform={`translate(0,${height - marginBottom})`}
-      />
+      <g ref={gxRef} transform={`translate(0,${height - marginBottom})`} />
       {/* Y axis */}
-      <g
-        ref={gyRef}
-        transform={`translate(${marginLeft},0)`}
-      />
+      <g ref={gyRef} transform={`translate(${marginLeft},0)`} />
       {/* Line path */}
       <path
         fill="none"
         stroke="steelblue"
         strokeWidth="1.5"
-        d={line(data)}
+        d={line(lineData) || undefined}
       />
       {/* Data points */}
       <g fill="white" stroke="steelblue" strokeWidth="1.5">
-        {data.map((d, i) => (
-          <circle key={i} cx={x(i)} cy={y(d)} r="2.5" />
+        {lineData.map(([xi, yi], i) => (
+          <circle key={i} cx={x(xi)} cy={y(yi)} r="2.5" />
         ))}
       </g>
     </svg>

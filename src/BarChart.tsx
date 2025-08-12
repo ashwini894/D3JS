@@ -1,8 +1,9 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 
 export default function BarChart() {
-  const ref = useRef();
+  const ref = useRef<SVGSVGElement | null>(null);
+
   const [data, setData] = useState([10, 20, 30, 40, 50]);
 
   useEffect(() => {
@@ -10,21 +11,21 @@ export default function BarChart() {
       .attr("width", 300)
       .attr("height", 150);
 
-    const bars = svg.selectAll("rect")
-      .data(data);
+    const bars = svg.selectAll<SVGRectElement, number>("rect").data(data);
 
     bars.enter()
-      .append("rect")
-      .merge(bars)
-      .transition()
-      .duration(500)
-      .attr("x", (_, i) => i * 60)
-      .attr("y", d => 150 - d * 3)
-      .attr("width", 50)
-      .attr("height", d => d * 3)
-      .attr("fill", "steelblue");
+    .append("rect")
+    .merge(bars)
+    .transition()
+    .duration(500)
+    .attr("x", (_: number, i: number) => i * 60)
+    .attr("y", (d: number) => 150 - d * 3)
+    .attr("width", 50)
+    .attr("height", (d: number) => d * 3)
+    .attr("fill", "steelblue");
 
     bars.exit().remove();
+
   }, [data]);
 
   const updateData = () => {
